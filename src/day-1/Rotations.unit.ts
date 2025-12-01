@@ -27,10 +27,26 @@ it('calculates the password as 2', async () => {
   expect(password).toBe(2);
 });
 
-it('calcuates the password as 4', async () => {
+it('calcuates the password as 5', async () => {
   const data = 'R1\nL11\nR3\nL4\nR1\nL7\nL2\nR9\nR11\nL11\nR5';
   const rotations = await Rotations.load(data);
   const startingNumber = 10;
+  const password = rotations.calculatePassword(startingNumber);
+  expect(password).toBe(5);
+});
+
+it('calculates 5 clicks', async () => {
+  const data = 'L2\nR2\nL2\nR2\nL2';
+  const rotations = await Rotations.load(data);
+  const startingNumber = 1;
+  const password = rotations.calculatePassword(startingNumber);
+  expect(password).toBe(5);
+});
+
+it('calculates password when it doesnt move from zero', async () => {
+  const data = 'R3\nL3\nR3\nL3\nR200';
+  const rotations = await Rotations.load(data);
+  const startingNumber = 0;
   const password = rotations.calculatePassword(startingNumber);
   expect(password).toBe(4);
 });
@@ -48,7 +64,7 @@ it('the range is 0 to 99 and then it loops back around when going past zero in t
   const rotations = await Rotations.load(data);
   const startingNumber = 50;
   const password = rotations.calculatePassword(startingNumber);
-  expect(password).toBe(1);
+  expect(password).toBe(3);
 });
 
 it('calculates the password as 1 when starting at 0 and adding 100', async () => {
@@ -65,4 +81,28 @@ it('calculates the password as 1 when starting at 0 and subtracting 100', async 
   const startingNumber = 0;
   const password = rotations.calculatePassword(startingNumber);
   expect(password).toBe(1);
+});
+
+it('calculates the password as 10 when high amount is used to add', async () => {
+  const data = 'R1000';
+  const rotations = await Rotations.load(data);
+  const startingNumber = 50;
+  const password = rotations.calculatePassword(startingNumber);
+  expect(password).toBe(10);
+});
+
+it('calculates the password as 10 when high amount is used to subtract', async () => {
+  const data = 'L1000\nL1000';
+  const rotations = await Rotations.load(data);
+  const startingNumber = 50;
+  const password = rotations.calculatePassword(startingNumber);
+  expect(password).toBe(20);
+});
+
+it('calculates the part 2 example correctly', async () => {
+  const data = 'L68\nL30\nR48\nL5\nR60\nL55\nL1\nL99\nR14\nL82';
+  const rotations = await Rotations.load(data);
+  const startingNumber = 50;
+  const password = rotations.calculatePassword(startingNumber);
+  expect(password).toBe(6);
 });

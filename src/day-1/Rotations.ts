@@ -27,29 +27,45 @@ export class Rotations {
     return new Rotations(rotations);
   }
 
-  constructor(private rotations: Rotation[]) {}
+  constructor(private _rotations: Rotation[]) {}
 
   get length(): number {
-    return this.rotations.length;
+    return this._rotations.length;
   }
 
   get(index: number): Rotation {
-    return this.rotations[index];
+    return this._rotations[index];
   }
 
   calculatePassword(startingNumber: number): number {
-    const result = this.rotations.reduce((acc, rotation) => {
-      let { currentNumber } = acc;
+    const result = this._rotations.reduce((acc, rotation) => {
+      const { counter, currentNumber } = acc;
+      let nextNumber: number;
+      let nextCounter: number = 0;
+
+      nextCounter += Math.floor(rotation.amount / 100);
 
       if (rotation.direction === "L") {
-        currentNumber = (currentNumber - rotation.amount + 100) % 100;
+        nextNumber = (currentNumber - (rotation.amount % 100) + 100) % 100;
+
+        if (currentNumber !== 0 && (currentNumber - (rotation.amount % 100)) < 0) {
+          nextCounter += 1;
+        }
       } else {
-        currentNumber = (currentNumber + rotation.amount) % 100;
+        nextNumber = (currentNumber + rotation.amount) % 100;
+
+        if (currentNumber !== 0 && (currentNumber + (rotation.amount % 100)) > 100) {
+          nextCounter += 1;
+        }
+      }
+
+      if (nextNumber === 0 && rotation.amount % 100 !== 0) {
+        nextCounter += 1;
       }
 
       return {
-        counter: currentNumber === 0 ? acc.counter + 1 : acc.counter,
-        currentNumber,
+        counter: counter + nextCounter,
+        currentNumber: nextNumber,
       }
     }, { counter: 0, currentNumber: startingNumber });
 
