@@ -1,0 +1,8 @@
+import path from "node:path";
+
+import { answer } from ".";
+
+it("calculates the correct sum of invalid IDs for challenge", async () => {
+  const filepath = path.join(__dirname, '..', 'input.txt');
+  expect(await answer(filepath)).toBe(168794698570517);
+});
